@@ -1,1 +1,12 @@
-<p>audio-recorder works!</p>
+<div class="recorder-container">
+  <button
+    [class.recording]="isRecording()"
+    (click)="toggleRecording()"
+    class="record-button"
+  >
+    {{ isRecording() ? "⏹️ Aufnahme beenden" : "🎤 Aufnahme starten" }}
+  </button>
+  <div *ngIf="transcription()" class="transcription">
+    {{ transcription() }}
+  </div>
+</div>
