@@ -1,6 +1,13 @@
-.graph-container {
+.mindmap-container {
   width: 100%;
-  height: 1200px;
+  height: 100%;
   background-image: linear-gradient(135deg, #385e6f 0%, #0b2d3b 100%);
+
   overflow: hidden;
+  position: relative;
+
+  svg {
+    display: block;
+    margin: 0 auto;
+  }
 }
