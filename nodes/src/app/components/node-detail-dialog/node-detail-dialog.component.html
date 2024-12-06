@@ -1,9 +1,10 @@
 <div class="dialog-wrapper">
   <header>
     <nav class="breadcrumbs">
-      <span>{{ data.mainTopic }}</span>
+      <span class="main-toppic">{{ data.mainTopic }}</span>
       <span class="separator">›››</span>
-      <span>{{ data.subTopic }}</span>
+      <span class="sub-toppic">{{ data.subTopic }}</span>
+      <span class="separator">››› ...</span>
     </nav>
     <div class="header-actions">
       <time>{{ data.createdAt | date : "dd.MM.yyyy" }}</time>
@@ -29,6 +30,7 @@
         formControlName="title"
         class="title-input"
         placeholder="Titel eingeben"
+        maxlength="24"
       />
       <textarea
         formControlName="description"

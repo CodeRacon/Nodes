@@ -5,6 +5,7 @@ import { Dialog, DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { LearningService } from '../../services/learning.service';
 import { LearningEntry } from '../../interfaces/learning-entry.interface';
 import { FieldValue, serverTimestamp } from '@angular/fire/firestore';
+import { DialogResult } from '../../interfaces/dialog-result.interface';
 
 interface UpdateData extends Omit<LearningEntry, 'updatedAt'> {
   updatedAt: FieldValue;
@@ -40,9 +41,8 @@ export class NodeDetailDialogComponent {
   }
 
   deleteEntry(): void {
-    // TODO: Bestätigungsdialog hinzufügen
     this.learningService.deleteEntry(this.data.id).then(() => {
-      this.dialogRef.close('deleted');
+      this.dialogRef.close({ status: 'deleted' });
     });
   }
 
