@@ -1,9 +1,11 @@
+import { FieldValue } from 'firebase/firestore';
+
 export interface LearningEntry {
-  id?: string;
+  id: string;
   title: string;
-  mainTopic: string;
-  subTopic?: string;
   description: string;
-  createdAt: Date;
-  updatedAt?: Date;
+  mainTopic: string;
+  subTopic: string;
+  createdAt: Date | FieldValue;
+  updatedAt: Date | FieldValue;
 }
