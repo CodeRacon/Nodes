@@ -8,9 +8,9 @@ import { SimulationConfig, NodeStyleConfig } from '../types/graph.types';
 export class D3ConfigService {
   private readonly nodeStyles: NodeStyleConfig = {
     colors: {
-      1: '#ff7f0e', // Orange für Root-Nodes
-      2: '#1f77b4', // Blau für Zwischen-Nodes
-      3: '#2ca02c', // Grün für Leaf-Nodes
+      1: '#8B5CC0', // Orange für Root-Nodes
+      2: '#B849BA', // Blau für Zwischen-Nodes
+      3: '#BA496E', // Grün für Leaf-Nodes
       default: '#999',
     },
     sizes: {
@@ -33,8 +33,8 @@ export class D3ConfigService {
       .force('collision', this.createCollisionForce())
       .force('x', this.createXForce(width))
       .force('y', this.createYForce(height))
-      .alphaDecay(0.1) // Schnellere Stabilisierung
-      .velocityDecay(0.6); // Mehr Dämpfung
+      .alphaDecay(0.125) // Schnellere Stabilisierung
+      .velocityDecay(0.675); // Mehr Dämpfung
   }
 
   private createLinkForce() {
@@ -42,25 +42,46 @@ export class D3ConfigService {
       .forceLink()
       .id((d: any) => d.id)
       .distance((d: any) => {
-        const connections = (d.target as any).connections?.length || 0;
-        return 100 + connections * 5;
+        // Prüfe die verbundenen Node-Gruppen
+        const sourceGroup = (d.source as any).group;
+        const targetGroup = (d.target as any).group;
+
+        // Root zu Middle Node Abstand
+        if (sourceGroup === 1 && targetGroup === 2) {
+          return 75; // Fester Abstand für Root->Middle
+        }
+        // Middle zu Leaf Node Abstand
+        if (sourceGroup === 2 && targetGroup === 3) {
+          return 45; // Kürzerer Abstand für Middle->Leaf
+        }
+        return 45; // Default Abstand
+      })
+      .strength((d: any) => {
+        // Stärkere Kraft für Root->Middle Verbindungen
+        const sourceGroup = (d.source as any).group;
+        const targetGroup = (d.target as any).group;
+
+        if (sourceGroup === 1 && targetGroup === 2) {
+          return 0.8; // Stärkere Bindung
+        }
+        return 0.65; // Default Stärke
       });
   }
 
   private createChargeForce() {
-    return d3.forceManyBody().strength(-125);
+    return d3.forceManyBody().strength(-25);
   }
 
   private createCenterForce(width: number, height: number) {
-    return d3.forceCenter(width / 2, height / 2);
+    return d3.forceCenter(width / 2, height / 2).strength(0.95);
   }
 
   private createCollisionForce() {
-    return d3.forceCollide().radius(65);
+    return d3.forceCollide().radius(65).strength(0.65); // Stärkere Kollisionsvermeidung
   }
 
   private createXForce(width: number) {
-    return d3.forceX(width / 2).strength(0.05);
+    return d3.forceX(width / 2).strength(0.075);
   }
 
   private createYForce(height: number) {
