@@ -18,6 +18,8 @@ export class MindmapTransformerService {
         name: topic,
         group: 1,
         collapsed: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
     });
 
@@ -42,6 +44,8 @@ export class MindmapTransformerService {
           group: 2,
           collapsed: true,
           parent: mainTopic,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         });
         links.push({
           source: mainTopic,
@@ -56,12 +60,18 @@ export class MindmapTransformerService {
       const titleId = `${subTopicId}-${entry.title}`;
       nodes.push({
         id: titleId,
+        firestoreId: entry.id,
         name: entry.title,
         group: 3,
         collapsed: true,
         parent: subTopicId,
         description: entry.description,
+        createdAt:
+          entry.createdAt instanceof Date ? entry.createdAt : new Date(),
+        updatedAt:
+          entry.updatedAt instanceof Date ? entry.updatedAt : new Date(),
       });
+
       links.push({
         source: subTopicId,
         target: titleId,
