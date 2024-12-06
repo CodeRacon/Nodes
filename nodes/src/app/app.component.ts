@@ -18,11 +18,11 @@ import { MindmapVisualizationComponent } from './components/mindmap-visualizatio
 export class AppComponent {
   title = 'nodes';
 
-  constructor(private seedService: SeedService) {
-    // Nur zum Testen!
-    this.seedService
-      .seedDummyData()
-      .then(() => console.log('✅ Dummy-Daten erfolgreich eingefügt!'))
-      .catch((err) => console.error('❌ Fehler beim Einfügen:', err));
-  }
+  // constructor(private seedService: SeedService) {
+  //   // Nur zum Testen!
+  //   this.seedService
+  //     .seedDummyData()
+  //     .then(() => console.log('✅ Dummy-Daten erfolgreich eingefügt!'))
+  //     .catch((err) => console.error('❌ Fehler beim Einfügen:', err));
+  // }
 }
