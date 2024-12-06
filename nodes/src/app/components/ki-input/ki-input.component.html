@@ -1,0 +1,10 @@
+<div>
+    <input type="text" placeholder="Write your today's learning" [(ngModel)]="kiInput">
+    <button (click)="sendPrompt()">prompt</button>
+</div>
+@if (response) {
+    <div>
+        <p>{{response}}</p>
+    </div>
+}
+    
