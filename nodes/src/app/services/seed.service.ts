@@ -26,6 +26,7 @@ export class SeedService {
         subTopic: 'Containers',
         description: 'Einführung in Docker-Container und ihre Verwaltung',
         createdAt: new Date('2024-04-14'),
+        updatedAt: new Date('2024-04-14'),
       },
       {
         title: 'Git Workflow',
@@ -33,6 +34,7 @@ export class SeedService {
         subTopic: 'Collaboration',
         description: 'Best Practices für Git-Branches und Merge-Strategien',
         createdAt: new Date('2024-04-15'),
+        updatedAt: new Date('2024-04-15'),
       },
       {
         title: 'API Design',
@@ -40,6 +42,7 @@ export class SeedService {
         subTopic: 'Development',
         description: 'Grundlagen der API-Entwicklung mit REST und GraphQL',
         createdAt: new Date('2024-04-16'),
+        updatedAt: new Date('2024-04-16'),
       },
       {
         title: 'JWT Authentication',
@@ -47,6 +50,7 @@ export class SeedService {
         subTopic: 'User Management',
         description: 'Sichere Authentifizierung mit JSON Web Tokens',
         createdAt: new Date('2024-04-17'),
+        updatedAt: new Date('2024-04-17'),
       },
       {
         title: 'WebSocket Basics',
@@ -54,6 +58,7 @@ export class SeedService {
         subTopic: 'Communication',
         description: 'Echtzeitkommunikation mit WebSockets einrichten',
         createdAt: new Date('2024-04-18'),
+        updatedAt: new Date('2024-04-18'),
       },
       {
         title: 'CSS Grid Layout',
@@ -61,13 +66,15 @@ export class SeedService {
         subTopic: 'Styling',
         description: 'Erstellen von responsiven Layouts mit CSS Grid',
         createdAt: new Date('2024-04-19'),
+        updatedAt: new Date('2024-04-19'),
       },
       {
-        title: 'Accessibility Guidelines',
+        title: 'Guidelines',
         mainTopic: 'Frontend',
-        subTopic: 'Best Practices',
+        subTopic: 'Accessibility',
         description: 'Webseiten barrierefrei gestalten mit WAI-ARIA',
         createdAt: new Date('2024-04-20'),
+        updatedAt: new Date('2024-04-20'),
       },
       {
         title: 'GraphQL Basics',
@@ -75,6 +82,7 @@ export class SeedService {
         subTopic: 'API',
         description: 'Datenabfragen mit GraphQL implementieren',
         createdAt: new Date('2024-04-21'),
+        updatedAt: new Date('2024-04-21'),
       },
       {
         title: 'Service Workers',
@@ -82,6 +90,7 @@ export class SeedService {
         subTopic: 'Performance',
         description: 'Offlinefähigkeit mit Service Workern verbessern',
         createdAt: new Date('2024-04-22'),
+        updatedAt: new Date('2024-04-22'),
       },
       {
         title: 'Kubernetes Deployment',
@@ -89,13 +98,15 @@ export class SeedService {
         subTopic: 'Orchestration',
         description: 'Skalierbare Anwendungen mit Kubernetes bereitstellen',
         createdAt: new Date('2024-04-23'),
+        updatedAt: new Date('2024-04-23'),
       },
       {
         title: 'Node.js Streams',
         mainTopic: 'Backend',
-        subTopic: 'Programming',
+        subTopic: 'Streams',
         description: 'Effiziente Datenverarbeitung mit Node.js Streams',
         createdAt: new Date('2024-04-24'),
+        updatedAt: new Date('2024-04-24'),
       },
       {
         title: 'Responsive Images',
@@ -104,6 +115,7 @@ export class SeedService {
         description:
           'Optimierung von Bildern für verschiedene Bildschirmgrößen',
         createdAt: new Date('2024-04-25'),
+        updatedAt: new Date('2024-04-25'),
       },
       {
         title: 'OAuth2 Integration',
@@ -111,13 +123,15 @@ export class SeedService {
         subTopic: 'Authorization',
         description: 'OAuth2 für Drittanbieter-Anwendungen integrieren',
         createdAt: new Date('2024-04-26'),
+        updatedAt: new Date('2024-04-26'),
       },
       {
-        title: 'Code Review Best Practices',
-        mainTopic: 'Collaboration',
+        title: 'Best Practices',
+        mainTopic: 'Code Review Best Practices',
         subTopic: 'Quality Assurance',
         description: 'Effektive Code Reviews im Team durchführen',
         createdAt: new Date('2024-04-27'),
+        updatedAt: new Date('2024-04-27'),
       },
       {
         title: 'ESLint Setup',
@@ -125,6 +139,7 @@ export class SeedService {
         subTopic: 'Tools',
         description: 'Einrichtung von ESLint für konsistenten JavaScript-Code',
         createdAt: new Date('2024-04-28'),
+        updatedAt: new Date('2024-04-28'),
       },
       {
         title: 'Server-Side Rendering',
@@ -132,6 +147,7 @@ export class SeedService {
         subTopic: 'Performance',
         description: 'SEO-Optimierung durch serverseitiges Rendering',
         createdAt: new Date('2024-04-29'),
+        updatedAt: new Date('2024-04-29'),
       },
       {
         title: 'Design Tokens',
@@ -139,6 +155,7 @@ export class SeedService {
         subTopic: 'Styling',
         description: 'Zentrale Verwaltung von Design-Parametern',
         createdAt: new Date('2024-04-30'),
+        updatedAt: new Date('2024-04-30'),
       },
       {
         title: 'Python Basics',
@@ -146,6 +163,7 @@ export class SeedService {
         subTopic: 'Languages',
         description: 'Grundlagen der Python-Programmierung',
         createdAt: new Date('2024-05-01'),
+        updatedAt: new Date('2024-05-01'),
       },
       {
         title: 'MongoDB Aggregation',
@@ -153,6 +171,7 @@ export class SeedService {
         subTopic: 'Database',
         description: 'Datenanalyse mit MongoDB Aggregation Pipelines',
         createdAt: new Date('2024-05-02'),
+        updatedAt: new Date('2024-05-02'),
       },
       {
         title: 'Microservices Architecture',
@@ -160,6 +179,7 @@ export class SeedService {
         subTopic: 'Design',
         description: 'Entwicklung skalierbarer Anwendungen mit Microservices',
         createdAt: new Date('2024-05-03'),
+        updatedAt: new Date('2024-05-03'),
       },
       {
         title: 'Webpack Configuration',
@@ -167,6 +187,7 @@ export class SeedService {
         subTopic: 'Tools',
         description: 'Anpassung des Webpack-Build-Prozesses',
         createdAt: new Date('2024-05-04'),
+        updatedAt: new Date('2024-05-04'),
       },
       {
         title: 'OAuth Scopes',
@@ -175,6 +196,7 @@ export class SeedService {
         description:
           'Verwendung von Scopes zur Einschränkung von Berechtigungen',
         createdAt: new Date('2024-05-05'),
+        updatedAt: new Date('2024-05-05'),
       },
       {
         title: 'DevTools Profiling',
@@ -182,6 +204,7 @@ export class SeedService {
         subTopic: 'Debugging',
         description: 'Analyse der Performance mit Chrome DevTools',
         createdAt: new Date('2024-05-06'),
+        updatedAt: new Date('2024-05-06'),
       },
       {
         title: 'Event Sourcing',
@@ -190,6 +213,7 @@ export class SeedService {
         description:
           'Event Sourcing zur Rückverfolgbarkeit von Änderungen nutzen',
         createdAt: new Date('2024-05-07'),
+        updatedAt: new Date('2024-05-07'),
       },
       {
         title: 'Webpack Plugins',
@@ -197,6 +221,7 @@ export class SeedService {
         subTopic: 'Tools',
         description: 'Erweiterung der Webpack-Funktionalität mit Plugins',
         createdAt: new Date('2024-05-08'),
+        updatedAt: new Date('2024-05-08'),
       },
       {
         title: 'Svelte Basics',
@@ -204,6 +229,7 @@ export class SeedService {
         subTopic: 'Framework',
         description: 'Einstieg in die Entwicklung mit Svelte',
         createdAt: new Date('2024-05-09'),
+        updatedAt: new Date('2024-05-09'),
       },
       {
         title: 'Cloud Storage',
@@ -211,6 +237,7 @@ export class SeedService {
         subTopic: 'Storage',
         description: 'Speichern und Abrufen von Dateien in der Cloud',
         createdAt: new Date('2024-05-10'),
+        updatedAt: new Date('2024-05-10'),
       },
       {
         title: 'ElasticSearch Queries',
@@ -218,6 +245,7 @@ export class SeedService {
         subTopic: 'Database',
         description: 'Effizientes Suchen und Filtern mit ElasticSearch',
         createdAt: new Date('2024-05-11'),
+        updatedAt: new Date('2024-05-11'),
       },
       {
         title: 'TDD with Jest',
@@ -225,6 +253,7 @@ export class SeedService {
         subTopic: 'Quality Assurance',
         description: 'Test Driven Development mit Jest umsetzen',
         createdAt: new Date('2024-05-12'),
+        updatedAt: new Date('2024-05-12'),
       },
       {
         title: 'Docker Compose',
@@ -232,6 +261,7 @@ export class SeedService {
         subTopic: 'Containers',
         description: 'Mehrere Container mit Docker Compose orchestrieren',
         createdAt: new Date('2024-05-13'),
+        updatedAt: new Date('2024-05-13'),
       },
       {
         title: 'Redis Caching',
@@ -239,6 +269,7 @@ export class SeedService {
         subTopic: 'Optimization',
         description: 'Anwendung von Redis zur Performance-Optimierung',
         createdAt: new Date('2024-05-14'),
+        updatedAt: new Date('2024-05-14'),
       },
       {
         title: 'Progressive Web Apps',
@@ -247,6 +278,7 @@ export class SeedService {
         description:
           'Erstellen von PWAs mit Offline- und Installationsfähigkeit',
         createdAt: new Date('2024-05-15'),
+        updatedAt: new Date('2024-05-15'),
       },
       {
         title: 'TypeScript Generics',
@@ -254,6 +286,7 @@ export class SeedService {
         subTopic: 'Languages',
         description: 'Generische Typen für flexibleren TypeScript-Code',
         createdAt: new Date('2024-05-16'),
+        updatedAt: new Date('2024-05-16'),
       },
       {
         title: 'Log Monitoring',
@@ -261,6 +294,7 @@ export class SeedService {
         subTopic: 'Diagnostics',
         description: 'Überwachung und Analyse von Logs mit ELK Stack',
         createdAt: new Date('2024-05-17'),
+        updatedAt: new Date('2024-05-17'),
       },
       {
         title: 'CSS Variables',
@@ -268,6 +302,7 @@ export class SeedService {
         subTopic: 'Styling',
         description: 'Verwendung von CSS-Variablen für dynamisches Styling',
         createdAt: new Date('2024-05-18'),
+        updatedAt: new Date('2024-05-18'),
       },
       {
         title: 'RabbitMQ Basics',
@@ -275,6 +310,7 @@ export class SeedService {
         subTopic: 'Communication',
         description: 'Nachrichtenwarteschlangen mit RabbitMQ implementieren',
         createdAt: new Date('2024-05-19'),
+        updatedAt: new Date('2024-05-19'),
       },
       {
         title: 'Angular Signals',
@@ -282,6 +318,7 @@ export class SeedService {
         subTopic: 'State Management',
         description: 'Reaktive Zustandsverwaltung mit Angular Signals',
         createdAt: new Date('2024-05-20'),
+        updatedAt: new Date('2024-05-20'),
       },
       {
         title: 'JSON Schema Validation',
@@ -289,13 +326,15 @@ export class SeedService {
         subTopic: 'Data Integrity',
         description: 'Validierung von Daten mit JSON Schema',
         createdAt: new Date('2024-05-21'),
+        updatedAt: new Date('2024-05-21'),
       },
       {
         title: 'Firebase Authentication',
         mainTopic: 'Backend',
-        subTopic: 'Security',
+        subTopic: 'Authentication',
         description: 'Benutzerauthentifizierung mit Firebase implementieren',
         createdAt: new Date('2024-05-22'),
+        updatedAt: new Date('2024-05-22'),
       },
     ];
 
