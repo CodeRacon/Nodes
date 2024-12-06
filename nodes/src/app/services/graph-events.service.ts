@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { Node } from '../interfaces/mindmap.interface';
 import { VisibilityManagerService } from './visibility-manager.service';
 import { LinkHandlerService } from './link-handler.service';
+import { BoundaryConstraintService } from './boundary-constraint.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,8 @@ import { LinkHandlerService } from './link-handler.service';
 export class GraphEventsService {
   constructor(
     private visibilityManager: VisibilityManagerService,
-    private linkHandler: LinkHandlerService
+    private linkHandler: LinkHandlerService,
+    private boundaryConstraint: BoundaryConstraintService // Neu!
   ) {}
 
   createDragHandler(
@@ -89,9 +91,23 @@ export class GraphEventsService {
 
   setupSimulationEvents(
     simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>,
-    onTick: () => void
+    onTick: () => void,
+    width: number, // Neu!
+    height: number // Neu!
   ): void {
-    simulation.on('tick', onTick);
+    simulation.on('tick', () => {
+      // Wende Constraints auf jeden Node an
+      simulation.nodes().forEach((node) => {
+        this.boundaryConstraint.applyBoundaryConstraints(
+          node as Node,
+          width,
+          height
+        );
+      });
+
+      // Führe ursprüngliche tick-Logik aus
+      onTick();
+    });
   }
 
   private handleDragStart(
