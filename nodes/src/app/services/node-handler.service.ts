@@ -132,9 +132,6 @@ export class NodeHandlerService {
   }
 
   private openNodeDetails(node: Node, allNodes: Node[]): void {
-    const parentNode = allNodes.find((n) => n.id === node.parent);
-    const rootNode = this.findRootNode(node, allNodes);
-
     const dialogRef = this.dialog.open<DialogResult>(
       NodeDetailDialogComponent,
       {
@@ -143,16 +140,15 @@ export class NodeHandlerService {
           title: node.name,
           description: node.description,
           createdAt: node.createdAt,
-          mainTopic: rootNode?.name || '',
-          subTopic: parentNode?.name || '',
+          mainTopic: this.findRootNode(node, allNodes)?.name || '',
+          subTopic: allNodes.find((n) => n.id === node.parent)?.name || '',
         },
       }
     );
 
     dialogRef.closed.subscribe((result) => {
-      if (result && 'status' in result && result.status === 'updated') {
-        console.log(result.path);
-        this.nodeUpdated.emit(result.path);
+      if (result && 'status' in result && result.status === 'deleted') {
+        this.nodeUpdated.emit(); // Trigger reload ohne Pfad
       }
     });
   }
