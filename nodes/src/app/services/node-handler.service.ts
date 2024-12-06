@@ -1,15 +1,30 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, EventEmitter, Output } from '@angular/core';
 import * as d3 from 'd3';
 import { D3ConfigService } from './d3-config.service';
 import { Node } from '../interfaces/mindmap.interface';
 import { BaseType } from 'd3';
 import { GraphEventsService } from './graph-events.service';
 import { LinkHandlerService } from './link-handler.service';
+import { NodeDetailDialogComponent } from '../components/node-detail-dialog/node-detail-dialog.component';
+import { Dialog } from '@angular/cdk/dialog';
+
+interface DialogResult {
+  status: 'updated' | 'deleted';
+  path: {
+    mainTopic: string;
+    subTopic: string;
+    title: string;
+  };
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class NodeHandlerService {
+  @Output() nodeUpdated = new EventEmitter<DialogResult['path']>();
+
+  private dialog = inject(Dialog);
+
   constructor(
     private d3Config: D3ConfigService,
     private graphEvents: GraphEventsService,
@@ -34,7 +49,12 @@ export class NodeHandlerService {
         (exit) => this.handleNodeExit(exit)
       )
       .on('click', (event: MouseEvent, d: Node) => {
-        this.graphEvents.handleNodeClick(event, d, nodes, linkElements);
+        if (d.group === 3) {
+          // Nur für Leaf-Nodes
+          this.openNodeDetails(d, nodes);
+        } else {
+          this.graphEvents.handleNodeClick(event, d, nodes, linkElements);
+        }
         nodeGroup.style('display', (node: Node) => {
           if (node.group === 1) return 'block';
           return node.collapsed ? 'none' : 'block';
@@ -109,5 +129,41 @@ export class NodeHandlerService {
           .attr('ry', 4);
       }
     });
+  }
+
+  private openNodeDetails(node: Node, allNodes: Node[]): void {
+    const parentNode = allNodes.find((n) => n.id === node.parent);
+    const rootNode = this.findRootNode(node, allNodes);
+
+    const dialogRef = this.dialog.open<DialogResult>(
+      NodeDetailDialogComponent,
+      {
+        data: {
+          id: node.firestoreId,
+          title: node.name,
+          description: node.description,
+          createdAt: node.createdAt,
+          mainTopic: rootNode?.name || '',
+          subTopic: parentNode?.name || '',
+        },
+      }
+    );
+
+    dialogRef.closed.subscribe((result) => {
+      if (result && 'status' in result && result.status === 'updated') {
+        console.log(result.path);
+        this.nodeUpdated.emit(result.path);
+      }
+    });
+  }
+
+  private findRootNode(node: Node, allNodes: Node[]): Node | undefined {
+    let currentNode = node;
+    while (currentNode.parent) {
+      const parentNode = allNodes.find((n) => n.id === currentNode.parent);
+      if (!parentNode) break;
+      currentNode = parentNode;
+    }
+    return currentNode;
   }
 }
