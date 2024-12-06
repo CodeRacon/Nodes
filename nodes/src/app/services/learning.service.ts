@@ -6,8 +6,10 @@ import {
   query,
   orderBy,
   collectionData,
-  DocumentReference,
-  DocumentData,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp,
 } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -24,17 +26,32 @@ export class LearningService {
     return from(
       addDoc(entriesRef, {
         ...entry,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       })
     )
       .pipe(map(() => void 0))
       .toPromise();
   }
 
+  updateEntry(entry: LearningEntry & { id: string }): Promise<void> {
+    const docRef = doc(this.firestore, 'learningEntries', entry.id);
+    return from(
+      updateDoc(docRef, {
+        ...entry,
+        updatedAt: serverTimestamp(),
+      })
+    ).toPromise();
+  }
+
+  deleteEntry(id: string): Promise<void> {
+    const docRef = doc(this.firestore, 'learningEntries', id);
+    return from(deleteDoc(docRef)).toPromise();
+  }
+
   getEntries(): Observable<LearningEntry[]> {
     const entriesRef = collection(this.firestore, 'learningEntries');
     const q = query(entriesRef, orderBy('createdAt', 'desc'));
-    return collectionData(q) as Observable<LearningEntry[]>;
+    return collectionData(q, { idField: 'id' }) as Observable<LearningEntry[]>;
   }
 }
