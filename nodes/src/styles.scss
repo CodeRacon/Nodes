@@ -3,6 +3,14 @@
     "Arial", sans-serif;
 }
 
+body {
+  width: 100%;
+  min-height: 100vh;
+  max-width: 1440px;
+  margin: 0 auto;
+  background-image: linear-gradient(135deg, #385e6f 0%, #0b2d3b 100%);
+}
+
 button {
   cursor: pointer;
 }
