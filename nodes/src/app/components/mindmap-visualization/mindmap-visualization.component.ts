@@ -156,6 +156,7 @@ export class MindmapVisualizationComponent implements OnInit {
           mainTopic: this.findMainTopic(node),
           subTopic: this.findSubTopic(node),
         },
+        panelClass: 'node-detail-dialog',
       });
     }
   }
