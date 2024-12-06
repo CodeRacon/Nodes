@@ -12,7 +12,8 @@ import * as d3 from 'd3';
 import { NodeDetailDialogComponent } from '../node-detail-dialog/node-detail-dialog.component';
 import { Dialog } from '@angular/cdk/dialog';
 import { skip, distinctUntilChanged, Subject } from 'rxjs';
-import { takeUntil, take } from 'rxjs/operators';
+import { takeUntil, take, filter, tap } from 'rxjs/operators';
+import { DialogResult } from '../../interfaces/dialog-result.interface';
 
 @Component({
   selector: 'app-mindmap-visualization',
@@ -27,7 +28,7 @@ export class MindmapVisualizationComponent implements OnInit {
   private destroy$ = new Subject<void>();
 
   public width = 1200;
-  public height = 1200;
+  public height = 800;
 
   private svg: any;
   private simulation: any;
@@ -62,14 +63,27 @@ export class MindmapVisualizationComponent implements OnInit {
     subTopic: string;
     title: string;
   }): void {
+    console.log('LoadData started');
+
+    // Clear existing graph
     d3.select('#graph-container').selectAll('*').remove();
 
-    console.log(keepOpenPath);
+    // Reset visibility if no path provided
+    if (!keepOpenPath) {
+      console.log('No path provided, resetting view');
+      this.visibilityManager.hideAllChildNodes(this.data.nodes);
+    }
 
+    // Load and transform new data
     this.learningService
       .getEntries()
-      .pipe(take(1), takeUntil(this.destroy$))
+      .pipe(
+        tap((entries) => console.log('Received entries:', entries.length)),
+        take(1),
+        takeUntil(this.destroy$)
+      )
       .subscribe((entries) => {
+        console.log('Processing entries');
         const transformedData =
           this.transformer.transformEntriesToGraph(entries);
         this.data = {
@@ -138,25 +152,47 @@ export class MindmapVisualizationComponent implements OnInit {
     this.simulation.nodes(this.data.nodes);
     this.simulation.force('link').links(this.data.links);
 
-    this.graphEvents.setupSimulationEvents(this.simulation, () => {
-      this.linkHandler.updateLinkPositions(links);
-      nodes.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
-    });
+    this.graphEvents.setupSimulationEvents(
+      this.simulation,
+      () => {
+        this.linkHandler.updateLinkPositions(links);
+        nodes.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
+      },
+      this.width, // Neu!
+      this.height // Neu!
+    );
   }
 
-  // Neue Methode zum Öffnen des Dialogs
   openNodeDetails(node: Node): void {
     if (node.group === 3) {
-      // Nur für Leaf-Nodes
-      this.dialog.open(NodeDetailDialogComponent, {
+      const dialogRef = this.dialog.open(NodeDetailDialogComponent, {
         data: {
+          id: node.firestoreId,
           title: node.name,
           description: node.description,
           createdAt: node.createdAt,
           mainTopic: this.findMainTopic(node),
           subTopic: this.findSubTopic(node),
         },
-        panelClass: 'node-detail-dialog',
+      });
+
+      dialogRef.closed.pipe(take(1)).subscribe({
+        next: (result: unknown) => {
+          const typedResult = result as { status?: string; path?: any };
+          console.log('Dialog result received:', typedResult);
+
+          switch (typedResult?.status) {
+            case 'deleted':
+              console.log('Node deleted, reloading data');
+              this.loadData(); // Simple reload without path
+              break;
+            case 'updated':
+              console.log('Node updated, reloading with path');
+              this.loadData(typedResult.path);
+              break;
+          }
+        },
+        error: (err) => console.error('Dialog subscription error:', err),
       });
     }
   }
