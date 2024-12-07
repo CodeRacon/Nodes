@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { distinctUntilChanged, firstValueFrom } from 'rxjs';
@@ -41,6 +41,7 @@ export class AddNodeDialogComponent implements OnInit {
     aiPrompt: [''],
     kiContent: [''],
   });
+  @ViewChild('stepper') stepper!: MatStepper;
 
   isLoadingResponse = signal(false);
   currentKiResponse = signal('');
@@ -48,7 +49,8 @@ export class AddNodeDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<AddNodeDialogComponent>,
-    private kiService: KIService
+    private kiService: KIService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {}
 
   ngOnInit() {
@@ -84,6 +86,7 @@ export class AddNodeDialogComponent implements OnInit {
       // Hier könnten wir einen MatSnackBar oder ähnliches für Fehlermeldungen einbauen
     } finally {
       this.isLoadingResponse.set(false);
+      this.stepper.next();
     }
   }
 
