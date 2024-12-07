@@ -6,7 +6,7 @@ import { BaseType } from 'd3';
 import { GraphEventsService } from './graph-events.service';
 import { LinkHandlerService } from './link-handler.service';
 import { NodeDetailDialogComponent } from '../components/node-detail-dialog/node-detail-dialog.component';
-import { Dialog } from '@angular/cdk/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 interface DialogResult {
   status: 'updated' | 'deleted';
@@ -23,7 +23,7 @@ interface DialogResult {
 export class NodeHandlerService {
   @Output() nodeUpdated = new EventEmitter<DialogResult['path']>();
 
-  private dialog = inject(Dialog);
+  private dialog = inject(MatDialog);
 
   constructor(
     private d3Config: D3ConfigService,
@@ -132,23 +132,23 @@ export class NodeHandlerService {
   }
 
   private openNodeDetails(node: Node, allNodes: Node[]): void {
-    const dialogRef = this.dialog.open<DialogResult>(
-      NodeDetailDialogComponent,
-      {
-        data: {
-          id: node.firestoreId,
-          title: node.name,
-          description: node.description,
-          createdAt: node.createdAt,
-          mainTopic: this.findRootNode(node, allNodes)?.name || '',
-          subTopic: allNodes.find((n) => n.id === node.parent)?.name || '',
-        },
-      }
-    );
+    const dialogRef = this.dialog.open(NodeDetailDialogComponent, {
+      width: '600px',
+      data: {
+        id: node.firestoreId,
+        title: node.name,
+        description: node.description,
+        createdAt: node.createdAt,
+        mainTopic: this.findRootNode(node, allNodes)?.name || '',
+        subTopic: allNodes.find((n) => n.id === node.parent)?.name || '',
+      },
+    });
 
-    dialogRef.closed.subscribe((result) => {
-      if (result && 'status' in result && result.status === 'deleted') {
-        this.nodeUpdated.emit(); // Trigger reload ohne Pfad
+    dialogRef.afterClosed().subscribe((result: DialogResult) => {
+      if (result?.status === 'deleted') {
+        this.nodeUpdated.emit();
+      } else if (result?.status === 'updated' && result.path) {
+        this.nodeUpdated.emit(result.path);
       }
     });
   }

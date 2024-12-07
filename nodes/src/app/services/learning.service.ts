@@ -21,15 +21,9 @@ import { LearningEntry } from '../interfaces/learning-entry.interface';
 export class LearningService {
   constructor(private firestore: Firestore) {}
 
-  addEntry(entry: Omit<LearningEntry, 'id'>): Promise<void> {
+  addEntry(entry: LearningEntry): Promise<void> {
     const entriesRef = collection(this.firestore, 'learningEntries');
-    return from(
-      addDoc(entriesRef, {
-        ...entry,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      })
-    )
+    return from(addDoc(entriesRef, entry))
       .pipe(map(() => void 0))
       .toPromise();
   }
