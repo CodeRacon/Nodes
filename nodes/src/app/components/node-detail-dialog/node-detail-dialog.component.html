@@ -1,55 +1,95 @@
-<div class="dialog-wrapper">
-  <header>
-    <nav class="breadcrumbs">
-      <span class="main-toppic">{{ data.mainTopic }}</span>
-      <span class="separator">›››</span>
-      <span class="sub-toppic">{{ data.subTopic }}</span>
-      <span class="separator">››› ...</span>
-    </nav>
-    <div class="header-actions">
-      <time>{{ data.createdAt | date : "dd.MM.yyyy" }}</time>
+<div class="dialog-header">
+  <nav class="breadcrumbs">
+    <span class="main-topic">{{ data.mainTopic }}</span>
+    <span class="separator">›››</span>
+    <span class="sub-topic">{{ data.subTopic }}</span>
+  </nav>
+  <button mat-icon-button (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
 
-      <button class="close-button" (click)="close()">
-        <svg width="24" height="24" viewBox="0 0 24 24">
-          <path
-            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-          />
-        </svg>
+<mat-dialog-content>
+  <div class="metadata">
+    <time>{{ data.createdAt | date : "dd.MM.yyyy" }}</time>
+  </div>
+
+  @if (!isEditing()) {
+  <h1>{{ data.title }}</h1>
+  <markdown class="description">{{ data.description }}</markdown>
+  } @else {
+  <form [formGroup]="editForm">
+    <mat-form-field class="full-width">
+      <mat-label>Titel</mat-label>
+      <input matInput formControlName="title" maxlength="24" />
+    </mat-form-field>
+
+    <div class="ki-prompt-section">
+      <mat-form-field class="full-width">
+        <mat-label>KI-Prompt</mat-label>
+        <textarea matInput formControlName="aiPrompt" rows="3"></textarea>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="updateWithKi()"
+        [disabled]="!editForm.get('aiPrompt')?.value || isLoadingResponse()"
+      >
+        <mat-icon>psychology</mat-icon>
+        Neue KI-Antwort generieren
+      </button>
+
+      @if (isLoadingResponse()) {
+      <div class="spinner-container">
+        <mat-spinner diameter="24"></mat-spinner>
+        <span>KI-Antwort wird generiert...</span>
+      </div>
+      }
+    </div>
+    <div class="preview-toggle">
+      <button
+        mat-button
+        color="primary"
+        (click)="togglePreview()"
+        [class.active]="isPreviewMode()"
+      >
+        <mat-icon>{{ isPreviewMode() ? "edit" : "preview" }}</mat-icon>
+        {{ isPreviewMode() ? "Bearbeiten" : "Vorschau" }}
       </button>
     </div>
-  </header>
 
-  <main>
-    @if (!isEditing()) {
-    <h1>{{ data.title }}</h1>
-    <p class="description">{{ data.description }}</p>
+    @if (isPreviewMode()) {
+    <div class="preview-content">
+      <markdown [data]="editForm.get('description')?.value"></markdown>
+    </div>
     } @else {
-    <form [formGroup]="editForm">
-      <input
-        type="text"
-        formControlName="title"
-        class="title-input"
-        placeholder="Titel eingeben"
-        maxlength="24"
-      />
-      <textarea
-        formControlName="description"
-        class="description-input"
-        placeholder="Beschreibung eingeben"
-        rows="6"
-      >
-      </textarea>
-    </form>
+    <mat-form-field class="full-width">
+      <mat-label>Beschreibung</mat-label>
+      <textarea matInput formControlName="description" rows="8"></textarea>
+    </mat-form-field>
     }
-  </main>
+  </form>
+  }
+</mat-dialog-content>
 
-  <footer>
-    @if (!isEditing()) {
-    <button class="edit-button" (click)="startEditing()">Bearbeiten</button>
-    <button class="delete-button" (click)="deleteEntry()">Löschen</button>
-    } @else {
-    <button class="save-button" (click)="saveChanges()">Speichern</button>
-    <button class="cancel-button" (click)="cancelEditing()">Verwerfen</button>
-    }
-  </footer>
-</div>
+<mat-dialog-actions align="end">
+  @if (!isEditing()) {
+  <button mat-button color="primary" (click)="isEditing.set(true)">
+    <mat-icon>edit</mat-icon> Bearbeiten
+  </button>
+  <button mat-button color="warn" (click)="deleteEntry()">
+    <mat-icon>delete</mat-icon> Löschen
+  </button>
+  } @else {
+  <button mat-button (click)="isEditing.set(false)">Abbrechen</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="saveChanges()"
+    [disabled]="!editForm.valid"
+  >
+    Speichern
+  </button>
+  }
+</mat-dialog-actions>
