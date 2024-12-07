@@ -338,8 +338,8 @@ export class SeedService {
       },
     ];
 
-    for (const entry of dummyEntries) {
-      await this.learningService.addEntry(entry);
-    }
+    // for (const entry of dummyEntries) {
+    //   await this.learningService.addEntry(entry);
+    // }
   }
 }
