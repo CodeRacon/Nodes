@@ -14,11 +14,16 @@ import { Dialog } from '@angular/cdk/dialog';
 import { skip, distinctUntilChanged, Subject } from 'rxjs';
 import { takeUntil, take, filter, tap } from 'rxjs/operators';
 import { DialogResult } from '../../interfaces/dialog-result.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { AddNodeDialogComponent } from '../add-node-dialog/add-node-dialog.component';
+import { LearningEntry } from '../../interfaces/learning-entry.interface';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-mindmap-visualization',
   standalone: true,
-  imports: [CommonModule, NodeDetailDialogComponent],
+  imports: [CommonModule, NodeDetailDialogComponent, MatIcon, MatButtonModule],
   templateUrl: './mindmap-visualization.component.html',
   styleUrl: './mindmap-visualization.component.scss',
 })
@@ -45,7 +50,8 @@ export class MindmapVisualizationComponent implements OnInit {
     private linkHandler: LinkHandlerService,
     private visibilityManager: VisibilityManagerService,
     private graphEvents: GraphEventsService,
-    private dialog: Dialog
+    // private dialog: Dialog ,
+    private dialog: MatDialog
   ) {
     this.nodeHandler.nodeUpdated
       .pipe(takeUntil(this.destroy$))
@@ -163,6 +169,35 @@ export class MindmapVisualizationComponent implements OnInit {
     );
   }
 
+  openAddNodeDialog(): void {
+    const dialogRef = this.dialog.open(AddNodeDialogComponent, {
+      width: '1000px',
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result: DialogResult) => {
+      if (result?.status === 'created') {
+        this.createNewNodes(result);
+      }
+    });
+  }
+
+  private async createNewNodes(result: DialogResult): Promise<void> {
+    if (!result || !result.path) return;
+
+    const entry: Partial<LearningEntry> = {
+      mainTopic: result.path.mainTopic,
+      subTopic: result.path.subTopic,
+      title: result.path.title,
+      description: result.kiContent || '',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    await this.learningService.addEntry(entry as LearningEntry);
+    this.loadData(result.path);
+  }
+
   openNodeDetails(node: Node): void {
     if (node.group === 3) {
       const dialogRef = this.dialog.open(NodeDetailDialogComponent, {
@@ -176,27 +211,29 @@ export class MindmapVisualizationComponent implements OnInit {
         },
       });
 
-      dialogRef.closed.pipe(take(1)).subscribe({
-        next: (result: unknown) => {
-          const typedResult = result as { status?: string; path?: any };
-          console.log('Dialog result received:', typedResult);
+      dialogRef
+        .afterClosed()
+        .pipe(take(1))
+        .subscribe({
+          next: (result: unknown) => {
+            const typedResult = result as { status?: string; path?: any };
+            console.log('Dialog result received:', typedResult);
 
-          switch (typedResult?.status) {
-            case 'deleted':
-              console.log('Node deleted, reloading data');
-              this.loadData(); // Simple reload without path
-              break;
-            case 'updated':
-              console.log('Node updated, reloading with path');
-              this.loadData(typedResult.path);
-              break;
-          }
-        },
-        error: (err) => console.error('Dialog subscription error:', err),
-      });
+            switch (typedResult?.status) {
+              case 'deleted':
+                console.log('Node deleted, reloading data');
+                this.loadData(); // Simple reload without path
+                break;
+              case 'updated':
+                console.log('Node updated, reloading with path');
+                this.loadData(typedResult.path);
+                break;
+            }
+          },
+          error: (err: any) => console.error('Dialog subscription error:', err),
+        });
     }
   }
-
   // Hilfsmethoden zum Finden der Topic-Hierarchie
   private findMainTopic(node: Node): string {
     const rootNode = this.findRootNode(node);

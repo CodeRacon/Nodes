@@ -5,3 +5,13 @@
   [attr.width]="width"
   [attr.height]="height"
 ></div>
+
+<button
+  mat-fab
+  color="primary"
+  class="add-node-fab"
+  (click)="openAddNodeDialog()"
+  aria-label="Neuen Node erstellen"
+>
+  <mat-icon>add</mat-icon>
+</button>
