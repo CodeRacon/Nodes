@@ -5,9 +5,9 @@
 
 body {
   width: 100%;
-  min-height: 100vh;
+  min-height: 100%;
   max-width: 1440px;
-  margin: 0 auto;
+  margin: 0 auto !important;
   background-image: linear-gradient(135deg, #385e6f 0%, #0b2d3b 100%);
 }
 
@@ -41,9 +41,18 @@ button {
   pointer-events: auto;
   z-index: 1001;
   display: flex;
-  max-width: 500px !important;
+  // max-width: 1000px !important;
   width: 90% !important;
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
