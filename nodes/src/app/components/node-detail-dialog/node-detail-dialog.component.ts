@@ -1,11 +1,9 @@
 import { Component, Inject, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Dialog, DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { LearningService } from '../../services/learning.service';
 import { LearningEntry } from '../../interfaces/learning-entry.interface';
 import { FieldValue, serverTimestamp } from '@angular/fire/firestore';
-import { DialogResult } from '../../interfaces/dialog-result.interface';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MatDialogModule,
@@ -65,6 +63,12 @@ export class NodeDetailDialogComponent {
     });
   }
 
+  /**
+   * Updates the description field of the form with the response from the KI service.
+   * If the `aiPrompt` field has a value, it sends the prompt to the KI service, retrieves the response,
+   * and updates the `description` field of the form with the response content.
+   * The method also sets the `isLoadingResponse` signal to true during the request and false afterwards.
+   */
   async updateWithKi() {
     if (!this.editForm.get('aiPrompt')?.value) return;
 
@@ -83,6 +87,11 @@ export class NodeDetailDialogComponent {
     }
   }
 
+  /**
+   * Saves the changes made to the form and updates the corresponding entry in the learning service.
+   * If the form is valid, it creates an `UpdateData` object with the updated data and calls the `updateEntry` method of the `LearningService`.
+   * Upon successful update, it closes the dialog and returns the updated data, including the main topic, sub-topic, and title.
+   */
   saveChanges(): void {
     if (this.editForm.valid) {
       const updatedData: UpdateData = {
@@ -110,16 +119,26 @@ export class NodeDetailDialogComponent {
     }
   }
 
+  /**
+   * Deletes the current entry from the learning service and closes the dialog with a 'deleted' status.
+   */
   deleteEntry(): void {
     this.learningService.deleteEntry(this.data.id).then(() => {
       this.dialogRef.close({ status: 'deleted' });
     });
   }
 
+  /**
+   * Closes the dialog.
+   */
   close(): void {
     this.dialogRef.close();
   }
 
+  /**
+   * Toggles the preview mode of the component.
+   * This method updates the `isPreviewMode` property to the opposite of its current value.
+   */
   togglePreview(): void {
     this.isPreviewMode.update((prev) => !prev);
   }
