@@ -26,7 +26,7 @@ export class KIService {
         {
           role: 'system',
           content:
-            'Use MarkDown syntax for formatting. Response detailed, well structured, with headings, lists, and other formatting elements if siutable. Do not use any other language than german.',
+            'Allways use MarkDown syntax for formatting. Response detailed and well-structured. Allways format your answer with headings, lists, and/or other formatting elements if suitable. Do not use any other language than german.',
         },
         {
           content,
@@ -40,19 +40,20 @@ export class KIService {
     return this.http.post(this.apiUrl, body, { headers });
   }
 
-  getAIResponse(){
+  getAIResponse() {
     if (this.kiInput.trim()) {
       this.sendPrompt(this.kiInput).subscribe({
         next: (data) => {
-          this.response = data?.choices?.[0]?.message?.content || 'Keine Antwort erhalten.';
-          console.log(data)
+          this.response =
+            data?.choices?.[0]?.message?.content || 'Keine Antwort erhalten.';
+          console.log(data);
         },
         error: (error) => {
           console.error('Fehler beim Senden der Nachricht:', error);
           this.response = 'Fehler beim Abrufen der Antwort.';
-        }
-      })
+        },
+      });
       this.kiInput = '';
-      }
     }
+  }
 }
