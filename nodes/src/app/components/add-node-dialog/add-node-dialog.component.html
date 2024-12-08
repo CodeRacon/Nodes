@@ -13,7 +13,7 @@
       <div class="step-content">
         <mat-form-field>
           <mat-label>Name des Root Nodes</mat-label>
-          <input matInput formControlName="rootNode" required />
+          <input matInput formControlName="rootNode" required maxlength="24" />
           <mat-error *ngIf="nodeForm.get('rootNode')?.hasError('required')">
             Name ist erforderlich
           </mat-error>
@@ -30,7 +30,7 @@
       <div class="step-content">
         <mat-form-field>
           <mat-label>Name des Middle Nodes</mat-label>
-          <input matInput formControlName="middleNode" />
+          <input matInput formControlName="middleNode" maxlength="24" />
         </mat-form-field>
       </div>
       <div class="step-actions">
