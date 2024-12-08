@@ -10,21 +10,18 @@ import { VisibilityManagerService } from '../../services/visibility-manager.serv
 import { GraphEventsService } from '../../services/graph-events.service';
 import * as d3 from 'd3';
 import { NodeDetailDialogComponent } from '../node-detail-dialog/node-detail-dialog.component';
-import { Dialog } from '@angular/cdk/dialog';
-import { skip, distinctUntilChanged, Subject } from 'rxjs';
-import { takeUntil, take, filter, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil, take, tap } from 'rxjs/operators';
 import { DialogResult } from '../../interfaces/dialog-result.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { AddNodeDialogComponent } from '../add-node-dialog/add-node-dialog.component';
 import { LearningEntry } from '../../interfaces/learning-entry.interface';
 import { MatButtonModule } from '@angular/material/button';
-import { HeaderComponent } from "../header/header.component";
-
 @Component({
   selector: 'app-mindmap-visualization',
   standalone: true,
-  imports: [CommonModule, NodeDetailDialogComponent, MatIcon, MatButtonModule],
+  imports: [CommonModule, MatIcon, MatButtonModule],
   templateUrl: './mindmap-visualization.component.html',
   styleUrl: './mindmap-visualization.component.scss',
 })
@@ -51,7 +48,6 @@ export class MindmapVisualizationComponent implements OnInit {
     private linkHandler: LinkHandlerService,
     private visibilityManager: VisibilityManagerService,
     private graphEvents: GraphEventsService,
-    // private dialog: Dialog ,
     private dialog: MatDialog
   ) {
     this.nodeHandler.nodeUpdated
@@ -61,23 +57,32 @@ export class MindmapVisualizationComponent implements OnInit {
       });
   }
 
+  /**
+   * Initializes the mindmap visualization by loading the data and initializing the graph.
+   * This method is called when the component is initialized.
+   */
   ngOnInit(): void {
     this.loadData();
   }
 
+  /**
+   * Loads data for the mindmap visualization and initializes the graph.
+   *
+   * @param keepOpenPath - An optional object containing information about a path to keep open in the mindmap.
+   * @param keepOpenPath.mainTopic - The main topic of the path to keep open.
+   * @param keepOpenPath.subTopic - The sub-topic of the path to keep open.
+   * @param keepOpenPath.title - The title of the path to keep open.
+   */
   private loadData(keepOpenPath?: {
     mainTopic: string;
     subTopic: string;
     title: string;
   }): void {
-    console.log('LoadData started');
-
     // Clear existing graph
     d3.select('#graph-container').selectAll('*').remove();
 
     // Reset visibility if no path provided
     if (!keepOpenPath) {
-      console.log('No path provided, resetting view');
       this.visibilityManager.hideAllChildNodes(this.data.nodes);
     }
 
@@ -85,12 +90,11 @@ export class MindmapVisualizationComponent implements OnInit {
     this.learningService
       .getEntries()
       .pipe(
-        tap((entries) => console.log('Received entries:', entries.length)),
+        tap(),
         take(1),
         takeUntil(this.destroy$)
       )
       .subscribe((entries) => {
-        console.log('Processing entries');
         const transformedData =
           this.transformer.transformEntriesToGraph(entries);
         this.data = {
@@ -106,26 +110,19 @@ export class MindmapVisualizationComponent implements OnInit {
       });
   }
 
+  
+  /**
+   * Cleans up the component's subscriptions and resources when the component is destroyed.
+   * This method is called by Angular when the component is about to be destroyed.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  // Neue Methode zum Aktualisieren nach Dialog-Schließung
-  private handleDialogClose(result: any): void {
-    if (result?.status === 'updated' && result?.path) {
-      this.loadData(result.path);
-    }
-  }
-
-  private updateGraph(newData: MindmapData): void {
-    this.data = newData;
-    // Bestehende Simulation aktualisieren statt neu zu initialisieren
-    this.simulation.nodes(this.data.nodes);
-    this.simulation.force('link').links(this.data.links);
-    this.simulation.alpha(1).restart();
-  }
-
+  /**
+   * Initializes the graph visualization by creating the SVG container, setting up the simulation, and rendering the nodes and links.
+   */
   private initializeGraph(): void {
     this.createSvg();
     this.simulation = this.d3Config.createSimulation(this.width, this.height);
@@ -143,10 +140,13 @@ export class MindmapVisualizationComponent implements OnInit {
       this.graphEvents.createDragHandler.bind(this.graphEvents),
       links
     );
-
     this.setupSimulation(nodes, links);
   }
 
+  /**
+   * Creates the SVG container for the graph visualization.
+   * This method selects the '#graph-container' element and appends an SVG element with the specified width and height.
+   */
   private createSvg(): void {
     this.svg = d3
       .select('#graph-container')
@@ -155,6 +155,12 @@ export class MindmapVisualizationComponent implements OnInit {
       .attr('height', this.height);
   }
 
+  /**
+   * Sets up the simulation for the graph visualization.
+   * This method configures the simulation with the nodes and links data, and sets up the event handlers for the simulation.
+   * @param nodes - The nodes in the graph visualization.
+   * @param links - The links in the graph visualization.
+   */
   private setupSimulation(nodes: any, links: any): void {
     this.simulation.nodes(this.data.nodes);
     this.simulation.force('link').links(this.data.links);
@@ -170,6 +176,11 @@ export class MindmapVisualizationComponent implements OnInit {
     );
   }
 
+  /**
+   * Opens a dialog to add a new node to the mindmap visualization.
+   * The dialog is opened using the `AddNodeDialogComponent` and configured with a width of '1000px' and disabling the close button.
+   * When the dialog is closed, the method checks if the result has a 'created' status, and if so, calls the `createNewNodes` method with the result.
+   */
   openAddNodeDialog(): void {
     const dialogRef = this.dialog.open(AddNodeDialogComponent, {
       width: '1000px',
@@ -183,6 +194,12 @@ export class MindmapVisualizationComponent implements OnInit {
     });
   }
 
+  /**
+   * Creates a new learning entry in the database based on the provided dialog result.
+   * The method extracts the necessary information from the dialog result, creates a new `LearningEntry` object, and adds it to the database using the `learningService`.
+   * After the entry is added, the method calls `loadData` with the path from the dialog result to refresh the data in the visualization.
+   * @param result - The dialog result object containing the information for the new learning entry.
+   */
   private async createNewNodes(result: DialogResult): Promise<void> {
     if (!result || !result.path) return;
 
@@ -199,6 +216,14 @@ export class MindmapVisualizationComponent implements OnInit {
     this.loadData(result.path);
   }
 
+  /**
+   * Opens a dialog to display the details of a node in the mindmap visualization.
+   * If the node has a group of 3, it opens the `NodeDetailDialogComponent` with the node's details.
+   * When the dialog is closed, it checks the result status and performs the appropriate action:
+   * - If the status is 'deleted', it reloads the data without a path.
+   * - If the status is 'updated', it reloads the data with the updated path.
+   * @param node - The node for which the details should be displayed.
+   */
   openNodeDetails(node: Node): void {
     if (node.group === 3) {
       const dialogRef = this.dialog.open(NodeDetailDialogComponent, {
@@ -218,15 +243,12 @@ export class MindmapVisualizationComponent implements OnInit {
         .subscribe({
           next: (result: unknown) => {
             const typedResult = result as { status?: string; path?: any };
-            console.log('Dialog result received:', typedResult);
 
             switch (typedResult?.status) {
               case 'deleted':
-                console.log('Node deleted, reloading data');
                 this.loadData(); // Simple reload without path
                 break;
               case 'updated':
-                console.log('Node updated, reloading with path');
                 this.loadData(typedResult.path);
                 break;
             }
@@ -235,17 +257,33 @@ export class MindmapVisualizationComponent implements OnInit {
         });
     }
   }
-  // Hilfsmethoden zum Finden der Topic-Hierarchie
+
+  /**
+   * Hilfsmethoden zum Finden der Topic-Hierarchie
+   * Finds the main topic for the given node by traversing up the node hierarchy to the root node.
+   * @param node - The node for which the main topic should be found.
+   * @returns The name of the root node, or an empty string if the root node cannot be found.
+   */
   private findMainTopic(node: Node): string {
     const rootNode = this.findRootNode(node);
     return rootNode?.name || '';
   }
 
+  /**
+   * Finds the sub-topic for the given node by traversing up the node hierarchy to the parent node.
+   * @param node - The node for which the sub-topic should be found.
+   * @returns The name of the parent node, or an empty string if the parent node cannot be found.
+   */
   private findSubTopic(node: Node): string {
     const parentNode = this.data.nodes.find((n) => n.id === node.parent);
     return parentNode?.name || '';
   }
 
+  /**
+   * Finds the root node for the given node by traversing up the node hierarchy.
+   * @param node - The node for which the root node should be found.
+   * @returns The root node, or `undefined` if the root node cannot be found.
+   */
   private findRootNode(node: Node): Node | undefined {
     let currentNode = node;
     while (currentNode.parent) {
@@ -258,6 +296,12 @@ export class MindmapVisualizationComponent implements OnInit {
     return currentNode;
   }
 
+  /**
+   * Animates the opening of a path in the mindmap visualization.
+   * This method is responsible for expanding the root-level node, the middle-level nodes under the root, and the leaf-level nodes under the specific middle-level node.
+   * The animation is performed in a sequence of timeouts to create a smooth visual effect.
+   * @param path - An object containing the main topic, sub-topic, and title of the path to be opened.
+   */
   private animatePathOpening(path: {
     mainTopic: string;
     subTopic: string;
@@ -300,13 +344,11 @@ export class MindmapVisualizationComponent implements OnInit {
     }, 500);
   }
 
-  private showLinks(sourceId: string, targetId: string): void {
-    this.svg
-      .selectAll('.link')
-      .filter((l: any) => l.source.id === sourceId && l.target.id === targetId)
-      .style('display', 'block');
-  }
-
+  /**
+   * Updates the visibility of nodes and links in the mindmap visualization.
+   * This method is responsible for showing or hiding nodes based on their collapsed state, and updating the visibility of links accordingly.
+   * The simulation is also restarted to ensure the visualization is updated.
+   */
   private updateVisibility(): void {
     const nodeGroup = this.svg.selectAll('.node');
     const linkElements = this.svg.selectAll('.link');
