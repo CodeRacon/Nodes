@@ -50,7 +50,6 @@ export class AddNodeDialogComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<AddNodeDialogComponent>,
     private kiService: KIService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {}
 
   ngOnInit() {
@@ -99,6 +98,7 @@ export class AddNodeDialogComponent implements OnInit {
           subTopic: this.nodeForm.get('middleNode')?.value!,
           title: this.nodeForm.get('leafNode')?.value!,
         },
+        kiContent: this.nodeForm.get('kiContent')?.value!,
       };
       this.dialogRef.close(result);
     }
