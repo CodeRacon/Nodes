@@ -19,6 +19,7 @@ import { MatIcon } from '@angular/material/icon';
 import { AddNodeDialogComponent } from '../add-node-dialog/add-node-dialog.component';
 import { LearningEntry } from '../../interfaces/learning-entry.interface';
 import { MatButtonModule } from '@angular/material/button';
+import { HeaderComponent } from "../header/header.component";
 
 @Component({
   selector: 'app-mindmap-visualization',

@@ -1,3 +1,5 @@
-app-ki-input {
-  position: absolute;
+:host{
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
 }

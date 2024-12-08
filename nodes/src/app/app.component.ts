@@ -1,17 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AudioRecorderComponent } from './components/audio-recorder/audio-recorder.component';
 import { SeedService } from './services/seed.service';
 import { MindmapVisualizationComponent } from './components/mindmap-visualization/mindmap-visualization.component';
-import { KIInputComponent } from './components/ki-input/ki-input.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
-    // AudioRecorderComponent,
-    KIInputComponent,
+    HeaderComponent,
     MindmapVisualizationComponent,
   ],
   templateUrl: './app.component.html',
