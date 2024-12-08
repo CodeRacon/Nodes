@@ -15,6 +15,12 @@ export class KIService {
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Sendet eine Anfrage an den OpenAI-Chat-Endpunkt und gibt das Antwort-Observable zurück.
+   *
+   * @param content - Der Inhalt der Nachricht, die an den OpenAI-Chat-Endpunkt gesendet werden soll.
+   * @returns Ein Observable, das die Antwort vom OpenAI-Chat-Endpunkt enthält.
+   */
   sendPrompt(content: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.apiToken}`,
@@ -40,6 +46,11 @@ export class KIService {
     return this.http.post(this.apiUrl, body, { headers });
   }
 
+  /**
+   * Verarbeitet die Eingabe des Benutzers, sendet eine Anfrage an den OpenAI-Chat-Endpunkt und speichert die Antwort.
+   *
+   * Diese Methode wird aufgerufen, wenn der Benutzer eine Eingabe getätigt hat. Sie überprüft zunächst, ob die Eingabe nicht leer ist. Wenn dies der Fall ist, wird die `sendPrompt`-Methode aufgerufen, um eine Anfrage an den OpenAI-Chat-Endpunkt zu senden. Die Antwort wird dann in der `response`-Eigenschaft gespeichert. Wenn ein Fehler auftritt, wird eine Fehlermeldung in der `response`-Eigenschaft gespeichert.
+   */
   getAIResponse() {
     if (this.kiInput.trim()) {
       this.sendPrompt(this.kiInput).subscribe({

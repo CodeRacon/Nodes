@@ -8,6 +8,13 @@ import { Node, Link } from '../interfaces/mindmap.interface';
 export class D3Service {
   private simulation!: d3.Simulation<Node, Link>;
 
+  /**
+   * Creates a D3.js simulation for a force-directed graph layout.
+   *
+   * @param width - The width of the graph container.
+   * @param height - The height of the graph container.
+   * @returns A D3.js simulation instance for the force-directed graph layout.
+   */
   createSimulation(width: number, height: number): d3.Simulation<Node, Link> {
     return d3
       .forceSimulation<Node>()

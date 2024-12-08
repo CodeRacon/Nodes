@@ -5,6 +5,17 @@ import { Node } from '../interfaces/mindmap.interface';
   providedIn: 'root',
 })
 export class BoundaryConstraintService {
+  /**
+   * Applies boundary constraints to a given node within the specified width, height, and padding.
+   *
+   * This method ensures that the node's position is kept within the specified boundaries, preventing
+   * the node from going outside the defined area.
+   *
+   * @param node The node to apply the boundary constraints to.
+   * @param width The width of the boundary area.
+   * @param height The height of the boundary area.
+   * @param padding The padding around the boundary area.
+   */
   applyBoundaryConstraints(
     node: Node,
     width: number,
@@ -13,7 +24,6 @@ export class BoundaryConstraintService {
   ): void {
     const radius = this.getNodeRadius(node);
 
-    // Forciere stärkere Begrenzung
     node.x = Math.max(
       padding + radius,
       Math.min(width - padding - radius, node.x || 0)
@@ -24,17 +34,22 @@ export class BoundaryConstraintService {
     );
   }
 
+  /**
+   * Calculates the radius of a node based on its group.
+   *
+   * @param node The node to get the radius for.
+   * @returns The radius of the node.
+   */
   private getNodeRadius(node: Node): number {
-    // Deutlich größere Radien
     switch (node.group) {
       case 1:
-        return 50; // Von 25 auf 50
+        return 50;
       case 2:
-        return 35; // Von 15 auf 35
+        return 35;
       case 3:
-        return 25; // Von 10 auf 25
+        return 25;
       default:
-        return 15; // Von 5 auf 15
+        return 15;
     }
   }
 }

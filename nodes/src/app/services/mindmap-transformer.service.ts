@@ -6,11 +6,24 @@ import { Node, Link, MindmapData } from '../interfaces/mindmap.interface';
   providedIn: 'root',
 })
 export class MindmapTransformerService {
+  /**
+   * Transforms an array of `LearningEntry` objects into a `MindmapData` object, which contains a list of nodes and links
+   * that can be used to render a mindmap visualization.
+   *
+   * The transformation process involves the following steps:
+   * 1. Extract the unique main topics from the `LearningEntry` array.
+   * 2. Create a node for each main topic.
+   * 3. Create a map of sub-topics for each main topic.
+   * 4. Create a node for each sub-topic and a link between the main topic and the sub-topic.
+   * 5. Create a node for each entry title and a link between the sub-topic and the entry title.
+   *
+   * @param entries An array of `LearningEntry` objects to be transformed.
+   * @returns A `MindmapData` object containing the nodes and links for the mindmap visualization.
+   */
   transformEntriesToGraph(entries: LearningEntry[]): MindmapData {
     const nodes: Node[] = [];
     const links: Link[] = [];
 
-    // 1. Root-Nodes (Group 1) erstellen
     const mainTopics = [...new Set(entries.map((entry) => entry.mainTopic))];
     mainTopics.forEach((topic) => {
       nodes.push({
@@ -23,7 +36,6 @@ export class MindmapTransformerService {
       });
     });
 
-    // 2. Subtopic-Nodes (Group 2) erstellen
     const subTopicMap = new Map<string, Set<string>>();
     entries.forEach((entry) => {
       if (entry.subTopic) {
@@ -54,7 +66,6 @@ export class MindmapTransformerService {
       });
     });
 
-    // 3. Title-Nodes (Group 3) erstellen
     entries.forEach((entry) => {
       const subTopicId = `${entry.mainTopic}-${entry.subTopic}`;
       const titleId = `${subTopicId}-${entry.title}`;

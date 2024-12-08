@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import * as d3 from 'd3';
 import { Node } from '../interfaces/mindmap.interface';
-import { VisibilityManagerService } from './visibility-manager.service';
-import { LinkHandlerService } from './link-handler.service';
 import { BoundaryConstraintService } from './boundary-constraint.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GraphEventsService {
-  constructor(
-    private visibilityManager: VisibilityManagerService,
-    private linkHandler: LinkHandlerService,
-    private boundaryConstraint: BoundaryConstraintService // Neu!
-  ) {}
+  constructor(private boundaryConstraint: BoundaryConstraintService) {}
 
+  /**
+   * Creates a drag handler for the D3 simulation.
+   * The drag handler is responsible for handling the start, drag, and end events of a node being dragged.
+   *
+   * @param simulation - The D3 simulation instance.
+   * @returns A D3 drag handler function.
+   */
   createDragHandler(
     simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>
   ) {
@@ -25,6 +26,15 @@ export class GraphEventsService {
       .on('end', (event, d) => this.handleDragEnd(event, d, simulation));
   }
 
+  /**
+   * Handles the click event on a node in the graph.
+   * This function is responsible for collapsing and expanding the node's children and their associated links.
+   *
+   * @param event - The mouse event object.
+   * @param clickedNode - The node that was clicked.
+   * @param nodes - An array of all the nodes in the graph.
+   * @param linkElements - A D3 selection of the link elements in the graph.
+   */
   handleNodeClick(
     event: MouseEvent,
     clickedNode: Node,
@@ -35,13 +45,11 @@ export class GraphEventsService {
 
     if (clickedNode.group === 1) {
       if (!clickedNode.collapsed) {
-        // Beim Schließen alles ausblenden
         nodes.forEach((node) => {
           if (node.group !== 1) node.collapsed = true;
         });
         linkElements.style('display', 'none');
       } else {
-        // Beim Öffnen: Group-2 Children und deren Links zu Root einblenden
         nodes
           .filter((node) => node.group === 2 && node.parent === clickedNode.id)
           .forEach((node) => {
@@ -56,7 +64,6 @@ export class GraphEventsService {
       }
       clickedNode.collapsed = !clickedNode.collapsed;
     } else if (clickedNode.group === 2) {
-      // Erst alle existierenden Group-3 Links ausblenden
       linkElements
         .filter((l: any) => l.target.group === 3)
         .style('display', 'none');
@@ -92,11 +99,10 @@ export class GraphEventsService {
   setupSimulationEvents(
     simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>,
     onTick: () => void,
-    width: number, // Neu!
-    height: number // Neu!
+    width: number,
+    height: number
   ): void {
     simulation.on('tick', () => {
-      // Wende Constraints auf jeden Node an
       simulation.nodes().forEach((node) => {
         this.boundaryConstraint.applyBoundaryConstraints(
           node as Node,
@@ -104,8 +110,6 @@ export class GraphEventsService {
           height
         );
       });
-
-      // Führe ursprüngliche tick-Logik aus
       onTick();
     });
   }
@@ -136,20 +140,17 @@ export class GraphEventsService {
   }
 
   private handleGroup1Click(clickedNode: Node, nodes: Node[]): void {
-    // Alle anderen Group-1 Nodes schließen
     nodes
       .filter((node) => node.group === 1 && node.id !== clickedNode.id)
       .forEach((node) => {
         node.collapsed = true;
       });
 
-    // Direkte Group-2 Children togglen
     const directChildren = nodes.filter(
       (node) => node.group === 2 && node.parent === clickedNode.id
     );
     directChildren.forEach((child) => {
       child.collapsed = clickedNode.collapsed;
-      // Group-3 Children IMMER collapsed
       nodes
         .filter((grandChild) => grandChild.parent === child.id)
         .forEach((grandChild) => (grandChild.collapsed = true));
@@ -157,7 +158,6 @@ export class GraphEventsService {
   }
 
   private handleGroup2Click(clickedNode: Node, nodes: Node[]): void {
-    // Direkte Group-3 Children einblenden
     nodes
       .filter((node) => node.group === 3 && node.parent === clickedNode.id)
       .forEach((child) => (child.collapsed = false));

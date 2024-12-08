@@ -8,9 +8,9 @@ import { SimulationConfig, NodeStyleConfig } from '../types/graph.types';
 export class D3ConfigService {
   private readonly nodeStyles: NodeStyleConfig = {
     colors: {
-      1: '#8B5CC0', // Orange für Root-Nodes
-      2: '#B849BA', // Blau für Zwischen-Nodes
-      3: '#BA496E', // Grün für Leaf-Nodes
+      1: '#8B5CC0',
+      2: '#B849BA',
+      3: '#BA496E',
       default: '#999',
     },
     sizes: {
@@ -21,6 +21,15 @@ export class D3ConfigService {
     },
   };
 
+  /**
+   * Creates a D3 force simulation configuration for the graph visualization.
+   * The simulation is configured with various forces, such as link, center, collision, and x/y forces,
+   * to control the positioning and behavior of the nodes and links in the visualization.
+   *
+   * @param width The width of the visualization area.
+   * @param height The height of the visualization area.
+   * @returns A D3 force simulation configuration.
+   */
   createSimulation(
     width: number,
     height: number
@@ -34,39 +43,42 @@ export class D3ConfigService {
         .force('collision', this.createCollisionForce())
         .force('x', this.createXForce(width))
         .force('y', this.createYForce(height))
-        .alphaDecay(0.125) // Schnellere Stabilisierung
+        .alphaDecay(0.125)
         .velocityDecay(0.675)
-    ); // Mehr Dämpfung
+    );
   }
 
+  /**
+   * Creates a force link configuration for the D3 simulation.
+   * The link force determines the distance and strength between connected nodes.
+   * The distance and strength are adjusted based on the groups of the connected nodes.
+   *
+   * @returns A D3 force link configuration.
+   */
   private createLinkForce() {
     return d3
       .forceLink()
       .id((d: any) => d.id)
       .distance((d: any) => {
-        // Prüfe die verbundenen Node-Gruppen
         const sourceGroup = (d.source as any).group;
         const targetGroup = (d.target as any).group;
 
-        // Root zu Middle Node Abstand
         if (sourceGroup === 1 && targetGroup === 2) {
-          return 75; // Fester Abstand für Root->Middle
+          return 75;
         }
-        // Middle zu Leaf Node Abstand
         if (sourceGroup === 2 && targetGroup === 3) {
-          return 45; // Kürzerer Abstand für Middle->Leaf
+          return 45;
         }
-        return 45; // Default Abstand
+        return 45;
       })
       .strength((d: any) => {
-        // Stärkere Kraft für Root->Middle Verbindungen
         const sourceGroup = (d.source as any).group;
         const targetGroup = (d.target as any).group;
 
         if (sourceGroup === 1 && targetGroup === 2) {
-          return 0.8; // Stärkere Bindung
+          return 0.8;
         }
-        return 0.65; // Default Stärke
+        return 0.65;
       });
   }
 
@@ -79,7 +91,7 @@ export class D3ConfigService {
   }
 
   private createCollisionForce() {
-    return d3.forceCollide().radius(65).strength(0.65); // Stärkere Kollisionsvermeidung
+    return d3.forceCollide().radius(65).strength(0.65);
   }
 
   private createXForce(width: number) {

@@ -31,6 +31,16 @@ export class NodeHandlerService {
     private linkHandler: LinkHandlerService
   ) {}
 
+  /**
+   * Renders the nodes in the D3 visualization.
+   *
+   * @param container - The D3 selection of the container element where the nodes will be rendered.
+   * @param nodes - An array of `Node` objects representing the data for the nodes.
+   * @param simulation - The D3 simulation object that manages the node positions.
+   * @param dragHandler - A function that returns a D3 drag behavior for the nodes.
+   * @param linkElements - The D3 selection of the link elements in the visualization.
+   * @returns The D3 selection of the node group.
+   */
   renderNodes(
     container: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
     nodes: Node[],
@@ -49,10 +59,9 @@ export class NodeHandlerService {
         (exit) => this.handleNodeExit(exit)
       )
       .on('click', (event: MouseEvent, d: Node) => {
-        event.stopPropagation(); // Verhindert Bubble-Up
-        simulation.alpha(0); // Stoppt die Simulation temporär
+        event.stopPropagation();
+        simulation.alpha(0);
         if (d.group === 3) {
-          // Nur für Leaf-Nodes
           this.openNodeDetails(d, nodes);
         } else {
           this.graphEvents.handleNodeClick(event, d, nodes, linkElements);
@@ -71,6 +80,14 @@ export class NodeHandlerService {
     return nodeGroup;
   }
 
+  /**
+   * Handles the entry of a new node into the D3 visualization.
+   *
+   * @param enter - The D3 selection of the new node elements.
+   * @param simulation - The D3 simulation object that manages the node positions.
+   * @param dragHandler - A function that returns a D3 drag behavior for the nodes.
+   * @returns The updated D3 selection of the node group.
+   */
   private handleNodeEnter(enter: any, simulation: any, dragHandler: any) {
     return enter
       .append('g')
@@ -80,14 +97,35 @@ export class NodeHandlerService {
       .call(dragHandler(simulation));
   }
 
+  /**
+   * Handles the exit of a node from the D3 visualization.
+   *
+   * This method is responsible for transitioning the node out of the visualization
+   * and removing it from the DOM. The node is transitioned out over a duration of
+   * 750 milliseconds, during which its radius is reduced to 0, and then the node
+   * is removed from the DOM.
+   *
+   * @param exit - The D3 selection of the node elements that are exiting the
+   * visualization.
+   * @returns The updated D3 selection of the node group.
+   */
   private handleNodeExit(exit: any) {
     return exit.transition().duration(750).attr('r', 0).remove();
   }
 
+  /**
+   * Adds node circles to the D3 visualization.
+   *
+   * This method is responsible for creating the visual representation of the nodes
+   * in the D3 visualization. It creates a set of circular elements for each node,
+   * and applies various visual effects to them, such as a light effect and a
+   * shadow effect.
+   *
+   * @param nodeGroup - The D3 selection of the node group elements.
+   */
   private addNodeCircles(nodeGroup: any) {
     const defs = nodeGroup.append('defs');
 
-    // Light effect (inset top-left)
     const lightFilter = defs.append('filter').attr('id', 'lightEffect');
 
     lightFilter
@@ -113,7 +151,6 @@ export class NodeHandlerService {
       .attr('k3', '0.25')
       .attr('k4', '0');
 
-    // Shadow effect (bottom-right)
     defs
       .append('filter')
       .attr('id', 'shadowEffect')
@@ -123,7 +160,6 @@ export class NodeHandlerService {
       .attr('stdDeviation', '4')
       .attr('flood-color', 'rgba(0,0,0,0.125)');
 
-    // Apply to nodes
     nodeGroup
       .selectAll('circle')
       .data((d: Node) => [d])
@@ -133,6 +169,14 @@ export class NodeHandlerService {
       .style('filter', 'url(#lightEffect) url(#shadowEffect)');
   }
 
+  /**
+   * Adds labels to the node group elements in the D3 visualization.
+   * The labels are positioned and styled based on the node's group property.
+   * It also calls the `addLabelBackgrounds` method to add a white background
+   * behind the labels.
+   *
+   * @param nodeGroup - The D3 selection of the node group elements.
+   */
   private addNodeLabels(nodeGroup: any) {
     const labels = nodeGroup
       .selectAll('text')
@@ -153,6 +197,12 @@ export class NodeHandlerService {
     this.addLabelBackgrounds(labels);
   }
 
+  /**
+   * Adds a white background behind the labels of the node group elements in the D3 visualization.
+   * This method is called by the `addNodeLabels` method to provide a consistent visual style for the labels.
+   *
+   * @param labels - The D3 selection of the text elements representing the node labels.
+   */
   private addLabelBackgrounds(labels: any) {
     labels.each(function (this: BaseType, d: Node) {
       const element = d3.select(this);
@@ -174,6 +224,12 @@ export class NodeHandlerService {
     });
   }
 
+  /**
+   * Opens a dialog to display the details of a node.
+   *
+   * @param node - The node whose details should be displayed.
+   * @param allNodes - An array of all the nodes in the application.
+   */
   private openNodeDetails(node: Node, allNodes: Node[]): void {
     const dialogRef = this.dialog.open(NodeDetailDialogComponent, {
       width: '600px',
@@ -196,6 +252,13 @@ export class NodeHandlerService {
     });
   }
 
+  /**
+   * Finds the root node for the given node in the list of all nodes.
+   *
+   * @param node - The node for which to find the root node.
+   * @param allNodes - The list of all nodes in the application.
+   * @returns The root node, or `undefined` if the root node cannot be found.
+   */
   private findRootNode(node: Node, allNodes: Node[]): Node | undefined {
     let currentNode = node;
     while (currentNode.parent) {
