@@ -1,0 +1,37 @@
+header {
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
+    svg {
+      margin-top: 4px;
+      filter: drop-shadow(2px 2px 2px #1c093230);
+    }
+
+    > span {
+      font-size: 3.25rem;
+      font-weight: 700;
+      line-height: 120%;
+      text-shadow: 2px 2px 2px #1c093230;
+      background: linear-gradient(120deg, #b796dc, #8b5cc0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    color: #d5c6e5;
+  }
+}

@@ -1,0 +1,161 @@
+:host {
+  display: block;
+  max-height: 80vh;
+  padding: 1.5rem;
+}
+
+.mat-mdc-dialog-content {
+  max-height: calc(80vh - 150px);
+  overflow-y: auto;
+
+  h1:first-of-type {
+    font-weight: 700;
+    color: #673ab7;
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #6a92a5;
+    border-radius: 2px;
+  }
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #6a92a5 transparent;
+
+  /* Edge */
+  &::-ms-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-ms-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-ms-scrollbar-thumb {
+    background: #6a92a5;
+    border-radius: 2px;
+  }
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+
+  .separator {
+    color: #999;
+  }
+
+  .main-topic {
+    font-weight: 700;
+    color: #8b5cc0;
+  }
+  .sub-topic {
+    font-weight: 700;
+    color: #b849ba;
+  }
+}
+
+.metadata {
+  color: #666;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.description {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+mat-dialog-actions {
+  padding-top: 1rem;
+  margin-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.ki-prompt-section {
+  margin: 1rem 0;
+
+  button {
+    margin: 1rem 0;
+  }
+}
+
+.spinner-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+
+  span {
+    color: #666;
+  }
+}
+
+.preview-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem 0;
+
+  button.active {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.preview-content {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+  max-height: 60vh;
+  overflow-y: auto;
+
+  // Gleiche Schriftgrößen wie im Add-Node-Dialog
+  ::ng-deep {
+    h1 {
+      font-size: 1.5rem;
+    }
+    h2 {
+      font-size: 1.3rem;
+    }
+    h3 {
+      font-size: 1.1rem;
+    }
+    p,
+    li {
+      font-size: 1rem;
+    }
+    code {
+      font-size: 0.9rem;
+    }
+  }
+}
