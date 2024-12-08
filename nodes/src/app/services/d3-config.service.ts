@@ -25,16 +25,18 @@ export class D3ConfigService {
     width: number,
     height: number
   ): d3.Simulation<d3.SimulationNodeDatum, undefined> {
-    return d3
-      .forceSimulation()
-      .force('link', this.createLinkForce())
-      .force('charge', this.createChargeForce())
-      .force('center', this.createCenterForce(width, height))
-      .force('collision', this.createCollisionForce())
-      .force('x', this.createXForce(width))
-      .force('y', this.createYForce(height))
-      .alphaDecay(0.125) // Schnellere Stabilisierung
-      .velocityDecay(0.675); // Mehr Dämpfung
+    return (
+      d3
+        .forceSimulation()
+        .force('link', this.createLinkForce())
+        // .force('charge', this.createChargeForce())
+        .force('center', this.createCenterForce(width, height))
+        .force('collision', this.createCollisionForce())
+        .force('x', this.createXForce(width))
+        .force('y', this.createYForce(height))
+        .alphaDecay(0.125) // Schnellere Stabilisierung
+        .velocityDecay(0.675)
+    ); // Mehr Dämpfung
   }
 
   private createLinkForce() {
