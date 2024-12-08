@@ -12,6 +12,39 @@
     font-weight: 700;
     color: #673ab7;
   }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #6a92a5;
+    border-radius: 2px;
+  }
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #6a92a5 transparent;
+
+  /* Edge */
+  &::-ms-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-ms-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-ms-scrollbar-thumb {
+    background: #6a92a5;
+    border-radius: 2px;
+  }
 }
 
 .dialog-header {

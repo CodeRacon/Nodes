@@ -3,16 +3,21 @@
     "Arial", sans-serif;
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   display: flex;
-  place-items: center;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  margin: 0;
+  justify-content: center;
   width: 100%;
-  min-height: 100vh;
   max-width: 1440px;
-  background-image: linear-gradient(135deg, #385e6f 0%, #0b2d3b 100%);
-  overflow-y: overlay;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #3a2244 -15%, #0b2d3b 100%) no-repeat
+    fixed;
+  background-size: 100% 100%;
   overflow-x: clip;
 }
 
@@ -48,39 +53,4 @@ button {
 *::-ms-scrollbar-thumb {
   background: #0b2d3b;
   border-radius: 2px;
-}
-
-.mat-mdc-dialog-content {
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #6a92a5;
-    border-radius: 2px;
-  }
-
-  /* Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: #6a92a5 transparent;
-
-  /* Edge */
-  &::-ms-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  &::-ms-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-ms-scrollbar-thumb {
-    background: #6a92a5;
-    border-radius: 2px;
-  }
 }

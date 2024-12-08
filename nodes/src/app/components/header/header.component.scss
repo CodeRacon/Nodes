@@ -1,4 +1,8 @@
 header {
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -7,8 +11,10 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 0.5rem;
 
     svg {
+      margin-top: 4px;
       filter: drop-shadow(2px 2px 2px #1c093230);
     }
 
@@ -26,7 +32,6 @@ header {
 
   h3 {
     font-size: 1.25rem;
-    max-width: 50%;
     color: #d5c6e5;
   }
 }
