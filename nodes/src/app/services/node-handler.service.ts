@@ -49,6 +49,8 @@ export class NodeHandlerService {
         (exit) => this.handleNodeExit(exit)
       )
       .on('click', (event: MouseEvent, d: Node) => {
+        event.stopPropagation(); // Verhindert Bubble-Up
+        simulation.alpha(0); // Stoppt die Simulation temporär
         if (d.group === 3) {
           // Nur für Leaf-Nodes
           this.openNodeDetails(d, nodes);
@@ -73,7 +75,8 @@ export class NodeHandlerService {
     return enter
       .append('g')
       .attr('class', 'node')
-      .style('display', (d: Node) => (d.group === 1 ? 'block' : 'none')) // Root-Nodes initial sichtbar
+      .style('cursor', 'pointer')
+      .style('display', (d: Node) => (d.group === 1 ? 'block' : 'none'))
       .call(dragHandler(simulation));
   }
 
@@ -82,12 +85,52 @@ export class NodeHandlerService {
   }
 
   private addNodeCircles(nodeGroup: any) {
+    const defs = nodeGroup.append('defs');
+
+    // Light effect (inset top-left)
+    const lightFilter = defs.append('filter').attr('id', 'lightEffect');
+
+    lightFilter
+      .append('feGaussianBlur')
+      .attr('in', 'SourceAlpha')
+      .attr('stdDeviation', '1.75')
+      .attr('result', 'blur');
+
+    lightFilter
+      .append('feOffset')
+      .attr('in', 'blur')
+      .attr('dx', '2.25')
+      .attr('dy', '2.25')
+      .attr('result', 'offsetBlur');
+
+    lightFilter
+      .append('feComposite')
+      .attr('in', 'SourceGraphic')
+      .attr('in2', 'offsetBlur')
+      .attr('operator', 'arithmetic')
+      .attr('k1', '1')
+      .attr('k2', '0.75')
+      .attr('k3', '0.25')
+      .attr('k4', '0');
+
+    // Shadow effect (bottom-right)
+    defs
+      .append('filter')
+      .attr('id', 'shadowEffect')
+      .append('feDropShadow')
+      .attr('dx', '-2')
+      .attr('dy', '-2')
+      .attr('stdDeviation', '4')
+      .attr('flood-color', 'rgba(0,0,0,0.125)');
+
+    // Apply to nodes
     nodeGroup
       .selectAll('circle')
       .data((d: Node) => [d])
       .join('circle')
       .attr('r', (d: Node) => this.d3Config.getNodeSize(d.group))
-      .attr('fill', (d: Node) => this.d3Config.getNodeColor(d.group));
+      .attr('fill', (d: Node) => this.d3Config.getNodeColor(d.group))
+      .style('filter', 'url(#lightEffect) url(#shadowEffect)');
   }
 
   private addNodeLabels(nodeGroup: any) {
