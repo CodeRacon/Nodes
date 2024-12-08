@@ -10,6 +10,9 @@ export class KIService {
   private apiUrl = `api/1/ai/${environment.infomaniac.product_id}/openai/chat/completions`;
   private apiToken = `${environment.infomaniac.token}`;
 
+  kiInput: string = '';
+  response: string | null = null;
+
   constructor(private http: HttpClient) {}
 
   sendPrompt(content: string): Observable<any> {
@@ -36,4 +39,20 @@ export class KIService {
 
     return this.http.post(this.apiUrl, body, { headers });
   }
+
+  getAIResponse(){
+    if (this.kiInput.trim()) {
+      this.sendPrompt(this.kiInput).subscribe({
+        next: (data) => {
+          this.response = data?.choices?.[0]?.message?.content || 'Keine Antwort erhalten.';
+          console.log(data)
+        },
+        error: (error) => {
+          console.error('Fehler beim Senden der Nachricht:', error);
+          this.response = 'Fehler beim Abrufen der Antwort.';
+        }
+      })
+      this.kiInput = '';
+      }
+    }
 }
