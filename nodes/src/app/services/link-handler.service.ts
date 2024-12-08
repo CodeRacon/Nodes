@@ -17,7 +17,7 @@ export class LinkHandlerService {
       .data(links)
       .join('line')
       .attr('stroke-width', 2)
-      .attr('stroke', '#999')
+      .attr('stroke', '#e6e6e6')
       .attr('stroke-opacity', 0.6)
       .style('display', (d: any) =>
         this.determineInitialLinkVisibility(d, nodes)
