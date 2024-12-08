@@ -1,35 +1,32 @@
-main{
+header {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .heading {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    
-    div{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 1.5rem 0 0.75rem 0;
 
-
-        img{
-            max-width: 28px;
-            max-height: 28px;
-        }
-    
-        span{
-            color: #2F1F42;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+    svg {
+      filter: drop-shadow(2px 2px 2px #1c093230);
     }
 
-    >p{
-        font-style: italic;
-        max-width: 50%;
+    > span {
+      font-size: 3.25rem;
+      font-weight: 700;
+      line-height: 120%;
+      text-shadow: 2px 2px 2px #1c093230;
+      background: linear-gradient(120deg, #b796dc, #8b5cc0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    max-width: 50%;
+    color: #d5c6e5;
+  }
 }
