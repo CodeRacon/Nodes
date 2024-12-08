@@ -4,55 +4,83 @@
 }
 
 body {
+  display: flex;
+  place-items: center;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   max-width: 1440px;
-  margin: 0 auto !important;
   background-image: linear-gradient(135deg, #385e6f 0%, #0b2d3b 100%);
+  overflow-y: overlay;
+  overflow-x: clip;
 }
 
 button {
   cursor: pointer;
 }
 
-.cdk-overlay-container {
-  position: fixed;
-  z-index: 1000;
-  pointer-events: none;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+/* Webkit Browser (Chrome, Safari, new Edge Versions) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.cdk-overlay-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(3px);
-  background: rgba(0, 0, 0, 0.3) !important;
-  z-index: 1000;
+::-webkit-scrollbar-track {
+  background: #0b2d3b;
 }
 
-.cdk-overlay-pane {
-  position: fixed !important;
-  pointer-events: auto;
-  z-index: 1001;
-  display: flex;
-  // max-width: 1000px !important;
-  width: 90% !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
+::-webkit-scrollbar-thumb {
+  background: #6a92a5;
+  border-radius: 2px;
 }
 
-html,
-body {
-  height: 100%;
+/* Edge (ältere Versionen) */
+*::-ms-scrollbar {
+  width: 8px;
+  height: 8px;
 }
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+*::-ms-scrollbar-track {
+  background: #0b2d3b;
+}
+
+*::-ms-scrollbar-thumb {
+  background: #0b2d3b;
+  border-radius: 2px;
+}
+
+.mat-mdc-dialog-content {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #6a92a5;
+    border-radius: 2px;
+  }
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #6a92a5 transparent;
+
+  /* Edge */
+  &::-ms-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-ms-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-ms-scrollbar-thumb {
+    background: #6a92a5;
+    border-radius: 2px;
+  }
 }

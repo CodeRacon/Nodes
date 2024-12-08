@@ -1,6 +1,7 @@
 :host {
   display: block;
-  padding: 1rem;
+  max-height: 80vh;
+  padding: 1.5rem;
 }
 
 .dialog-header {
@@ -53,9 +54,39 @@ mat-form-field {
   }
 }
 
+.mat-mdc-dialog-content {
+  max-height: calc(80vh - 150px);
+  overflow-y: auto;
+
+  h1:first-of-type {
+    font-weight: 700;
+    color: #673ab7;
+  }
+}
+
 .preview-content {
   background: #f8f9fa;
   padding: 1rem;
   border-radius: 4px;
-  min-height: 200px;
+  max-height: 60vh;
+  overflow-y: auto;
+
+  ::ng-deep {
+    h1 {
+      font-size: 1.5rem;
+    }
+    h2 {
+      font-size: 1.3rem;
+    }
+    h3 {
+      font-size: 1.1rem;
+    }
+    p,
+    li {
+      font-size: 1rem;
+    }
+    code {
+      font-size: 0.9rem;
+    }
+  }
 }
