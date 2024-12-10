@@ -7,7 +7,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class KIService {
-  private apiUrl = `api/1/ai/${environment.infomaniac.product_id}/openai/chat/completions`;
+  // private apiUrl = `api/1/ai/${environment.infomaniac.product_id}/openai/chat/completions`;
+
+  private apiUrl = `https://node-proxy-arm9.onrender.com/api/1/ai/${environment.infomaniac.product_id}/openai/chat/completions`;
   private apiToken = `${environment.infomaniac.token}`;
 
   kiInput: string = '';
