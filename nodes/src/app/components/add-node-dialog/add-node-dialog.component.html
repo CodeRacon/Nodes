@@ -26,11 +26,16 @@
 
     <!-- Middle Node Step -->
     <mat-step [stepControl]="nodeForm.get('middleNode')!">
-      <ng-template matStepLabel>Middle Node (Optional)</ng-template>
+      <ng-template matStepLabel>Middle Node</ng-template>
       <div class="step-content">
         <mat-form-field>
           <mat-label>Name des Middle Nodes</mat-label>
-          <input matInput formControlName="middleNode" maxlength="24" />
+          <input
+            matInput
+            formControlName="middleNode"
+            required
+            maxlength="24"
+          />
         </mat-form-field>
       </div>
       <div class="step-actions">
@@ -45,7 +50,7 @@
       <div class="step-content">
         <mat-form-field>
           <mat-label>Name des Leaf Nodes</mat-label>
-          <input matInput formControlName="leafNode" />
+          <input matInput formControlName="leafNode" required maxlength="24" />
         </mat-form-field>
 
         <mat-form-field *ngIf="nodeForm.get('leafNode')?.value">
