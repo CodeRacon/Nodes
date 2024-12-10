@@ -89,11 +89,7 @@ export class MindmapVisualizationComponent implements OnInit {
     // Load and transform new data
     this.learningService
       .getEntries()
-      .pipe(
-        tap(),
-        take(1),
-        takeUntil(this.destroy$)
-      )
+      .pipe(tap(), take(1), takeUntil(this.destroy$))
       .subscribe((entries) => {
         const transformedData =
           this.transformer.transformEntriesToGraph(entries);
@@ -110,7 +106,6 @@ export class MindmapVisualizationComponent implements OnInit {
       });
   }
 
-  
   /**
    * Cleans up the component's subscriptions and resources when the component is destroyed.
    * This method is called by Angular when the component is about to be destroyed.
@@ -308,19 +303,16 @@ export class MindmapVisualizationComponent implements OnInit {
     title: string;
   }): void {
     const rootNode = this.data.nodes.find((n) => n.id === path.mainTopic);
-    const subTopicNode = this.data.nodes.find(
-      (n) => n.id === `${path.mainTopic}-${path.subTopic}`
-    );
+    const subTopicId = `${path.mainTopic}-${path.subTopic}`.replace(/-/g, '_');
+    const subTopicNode = this.data.nodes.find((n) => n.id === subTopicId);
 
     if (!rootNode || !subTopicNode) return;
 
     const linkElements = this.svg.selectAll('line');
 
     setTimeout(() => {
-      // Root-Level öffnen und alle Middle-Nodes anzeigen
       rootNode.collapsed = false;
 
-      // Alle Middle-Nodes unter dieser Root öffnen
       this.data.nodes
         .filter((node) => node.group === 2 && node.parent === rootNode.id)
         .forEach((node) => {
@@ -331,7 +323,6 @@ export class MindmapVisualizationComponent implements OnInit {
       this.updateVisibility();
 
       setTimeout(() => {
-        // Alle Leaf-Nodes an der spezifischen Middle-Node öffnen
         this.data.nodes
           .filter((node) => node.group === 3 && node.parent === subTopicNode.id)
           .forEach((node) => {

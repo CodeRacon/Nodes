@@ -39,7 +39,6 @@ export class MindmapTransformerService {
     const subTopicMap = new Map<string, Set<string>>();
     entries.forEach((entry) => {
       if (entry.subTopic) {
-        // Null-Check hinzufügen
         if (!subTopicMap.has(entry.mainTopic)) {
           subTopicMap.set(entry.mainTopic, new Set());
         }
@@ -49,7 +48,7 @@ export class MindmapTransformerService {
 
     subTopicMap.forEach((subTopics, mainTopic) => {
       subTopics.forEach((subTopic) => {
-        const subTopicId = `${mainTopic}-${subTopic}`;
+        const subTopicId = `${mainTopic}-${subTopic}`.replace(/-/g, '_');
         nodes.push({
           id: subTopicId,
           name: subTopic,
@@ -67,8 +66,13 @@ export class MindmapTransformerService {
     });
 
     entries.forEach((entry) => {
-      const subTopicId = `${entry.mainTopic}-${entry.subTopic}`;
-      const titleId = `${subTopicId}-${entry.title}`;
+      const subTopicId = `${entry.mainTopic}-${entry.subTopic}`.replace(
+        /-/g,
+        '_'
+      );
+      const titleId = entry.title
+        ? `${subTopicId}-${entry.title.replace(/-/g, '_')}`
+        : subTopicId;
       nodes.push({
         id: titleId,
         firestoreId: entry.id,
